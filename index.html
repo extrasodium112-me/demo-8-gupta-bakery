@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gupta Bakery - Edit 21 Fixed</title>
+<meta name="theme-color" content="#E65100">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--brand:#E65100;--bg:#FFFBF2;--line:#FFE0B2}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:sans-serif;color:#3E2723;user-select:none}
+.wrap{max-width:1160px;margin:0 auto;padding:0 18px}
+header{position:sticky;top:0;z-index:60;background:linear-gradient(90deg,#E65100,#FF3D00)}
+.topbar{display:flex;gap:8px;padding:12px 0;align-items:center}
+.mark{width:40px;height:40px;background:#fff;color:#E65100;display:grid;place-items:center;border-radius:10px;font-weight:800}
+.searchbox{flex:1}.searchbox input{width:100%;padding:11px 14px;border-radius:10px;border:none}
+.callbtn{background:#fff;color:#BF360C;padding:9px 12px;border-radius:10px;font-weight:800;border:none;cursor:pointer;font-size:12px}
+/* EDIT 21 - SLOGAN BLACK + CREAM WHITE */
+.slogan-bar{background:#111;color:#FFFBF2;text-align:center;padding:16px 12px 18px 12px;font-weight:800;font-size:17px;letter-spacing:0.6px;border-bottom:3px solid #E65100;box-shadow:0 4px 12px rgba(0,0,0,0.4)}
+.menu{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+.item{background:#fff;border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column}
+.thumb{height:140px}.thumb img{width:100%;height:100%;object-fit:cover}
+.item-body{padding:10px;flex:1;display:flex;flex-direction:column}
+.qty-row{display:flex;gap:6px;margin:8px 0}.qty-box{display:flex;align-items:center;background:#FFF3E0;border:1.5px solid #FFCC80;border-radius:8px}.qty-box button{border:none;background:none;padding:6px 10px;font-size:16px;color:#E65100;font-weight:800;cursor:pointer}.qty-box input{width:32px;text-align:center;border:none;background:none;font-weight:800}
+.weight-select{flex:1;padding:6px;border:1.5px solid #FFCC80;border-radius:8px;background:#FFF3E0;font-size:11px;font-weight:600}
+.add-btn{background:linear-gradient(90deg,#E65100,#FF3D00);color:#fff;border:none;border-radius:10px;padding:10px;font-weight:800;cursor:pointer;width:100%;margin-top:auto}
+.chip{background:#fff;border:1.5px solid var(--line);border-radius:999px;padding:8px 14px;cursor:pointer;font-weight:600;font-size:12px}.chip[aria-pressed="true"]{background:#E65100;color:#fff}
+.cartbar{position:fixed;left:0;right:0;bottom:0;background:#fff;border-top:2px solid #FFE0B2;display:none;z-index:85}.cartbar.on{display:block}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:300;display:none;place-items:center;padding:12px}.overlay.on{display:grid}
+.box{background:#fff;border-radius:20px;padding:20px;width:100%;max-width:480px;max-height:95vh;overflow:auto}
+.box input,.box select,.box textarea{width:100%;padding:11px;border:1.5px solid #FFCC80;border-radius:10px;margin:6px 0}
+.btn-primary{background:linear-gradient(90deg,#E65100,#FF3D00);color:#fff;border:none;padding:12px;border-radius:12px;font-weight:800;cursor:pointer;width:100%}
+.delivery-opt{flex:1;padding:9px;border:2px solid #FFE0B2;border-radius:10px;cursor:pointer;text-align:center;font-weight:700;font-size:12px;background:#fff}.delivery-opt.active{border-color:#E65100;background:#FFF3E0;color:#BF360C}
+.pay-opt{flex:1;padding:12px;border:2px solid #FFE0B2;border-radius:12px;cursor:pointer;text-align:center;font-weight:800;font-size:13px;background:#fff}.pay-opt.active{border-color:#2E7D32;background:#E8F5E9;color:#2E7D32}
+.bill-paper{background:#fff;color:#111;padding:20px;border-radius:4px;font-family:monospace;font-size:12px;line-height:1.5;border:1px dashed #ccc}
+.admin-product{background:#FFFBF2;border:1px solid #FFE0B2;border-radius:12px;padding:10px;margin-bottom:10px;display:flex;gap:10px}
+.admin-product img{width:60px;height:60px;border-radius:10px;object-fit:cover}
+.cart-item{display:flex;gap:10px;padding:10px;background:#FFFBF2;border:1px solid #FFE0B2;border-radius:12px;margin-bottom:8px;align-items:center}
+.cart-item img{width:50px;height:50px;border-radius:8px;object-fit:cover}
+.cart-qty{display:flex;align-items:center;background:#fff;border:1px solid #FFCC80;border-radius:8px}
+.cart-qty button{border:none;background:none;padding:6px 10px;font-weight:800;color:#E65100;cursor:pointer}
+#cartBtn{position:fixed!important;bottom:85px!important;right:18px!important;background:#111!important;color:#fff!important;padding:14px 22px!important;border-radius:50px!important;box-shadow:0 8px 25px rgba(0,0,0,0.4);z-index:99!important;font-size:14px!important;border:2px solid #fff;cursor:pointer}
+.close-x{width:38px;height:38px;border-radius:50%;border:none;background:#FFEBEE;color:#C62828;font-size:20px;font-weight:800;cursor:pointer;display:grid;place-items:center}
+#adminModal{z-index:500!important}#pincodeGate{z-index:400!important}
+@media(max-width:800px){.menu{grid-template-columns:repeat(2,1fr)}#cartBtn{bottom:95px!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap topbar"><span class="mark">GB</span><b style="color:#fff;font-size:13px">Gupta Bakery Mhow</b><div class="searchbox"><input id="search" placeholder="Search cakes, bread..."></div><button id="billBtn" class="callbtn" style="display:none" onclick="openBill()">🧾 Bill</button><button id="userBtn" class="callbtn">Login</button><button id="adminBtn" class="callbtn" style="background:#fff;color:#111;font-weight:800;border:2px solid #FFCC80">Admin</button></div></header>
+
+<!-- EDIT 21 SLOGAN - BLACK + CREAM WHITE + CAKE EMOJI -->
+<div class="slogan-bar">🎂 Freshly Baked Happiness Everyday - Taste That Brings You Home 🍰</div>
+
+<main class="wrap" style="padding:14px 18px 220px">
+<div style="display:flex;gap:6px;overflow:auto;margin-bottom:12px" id="filters"></div>
+<div class="menu" id="grid"></div>
+</main>
+<button id="cartBtn" onclick="openCart()">🛒 Cart (0)</button>
+<div class="cartbar" id="cartbar">
+<div style="display:flex;gap:8px;padding:10px 16px;background:#FFFBF2;border-bottom:1px solid #FFE0B2"><div class="delivery-opt active" id="optPickup" onclick="setDelivery('pickup')">🏪 Pickup FREE</div><div class="delivery-opt" id="optDelivery" onclick="setDelivery('delivery')">🛵 Home Delivery +₹15</div></div>
+<div style="padding:10px 16px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(90deg,#E65100,#FF3D00);color:#fff"><div><b id="cart-count">0 items</b><br><small id="cart-breakup">₹0</small><br><b id="cart-total">₹0</b></div><div style="display:flex;gap:6px"><button onclick="openCart()" style="background:#fff;color:#E65100;padding:10px 14px;border-radius:10px;border:none;font-weight:800">View</button><button onclick="openCheckout()" style="background:#111;color:#fff;padding:10px 18px;border-radius:10px;border:none;font-weight:800">Order Now</button></div></div>
+</div>
+
+<div class="overlay" id="cartModal"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🛒 Your Cart - Edit 21</h3><button onclick="closeCart()" class="close-x">❌</button></div>
+<div style="display:flex;gap:8px;margin:12px 0"><div class="delivery-opt active" id="optPickup2" onclick="setDelivery('pickup')">🏪 Pickup FREE</div><div class="delivery-opt" id="optDelivery2" onclick="setDelivery('delivery')">🛵 Delivery +₹15</div></div>
+<div id="cartList" style="margin:12px 0;max-height:45vh;overflow:auto"></div>
+<div id="cartEmpty" style="text-align:center;padding:20px;color:#8D6E63;display:none">Cart khali hai<br><small>Product add karo</small></div>
+<div style="background:#FFF3E0;border-radius:12px;padding:10px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>Items Total:</span><b id="cartItemsTotal">₹0</b></div><div style="display:flex;justify-content:space-between;font-size:12px"><span>Delivery:</span><b id="cartDelivery">₹0</b></div><div style="display:flex;justify-content:space-between;font-size:14px;margin-top:6px;border-top:1px dashed #FFCC80;padding-top:6px"><span>Grand Total:</span><b id="cartGrandTotal" style="color:#E65100">₹0</b></div></div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><button onclick="clearCart()" style="background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;padding:12px;border-radius:10px;font-weight:700">🗑️ Clear Cart</button><button onclick="goToCheckout()" style="background:#111;color:#fff;border:none;padding:12px;border-radius:10px;font-weight:800">✅ Order Now</button></div>
+</div></div>
+
+<div class="overlay on" id="pincodeGate"><div class="box" style="text-align:center"><h2 style="margin:0;color:#BF360C">📍 Check Delivery Area</h2><p style="font-size:13px;color:#666">Enter your area pincode</p><input id="pinInput" placeholder="Enter 6-digit pincode" maxlength="6" type="password" inputmode="numeric" style="text-align:center;font-size:18px;font-weight:800;letter-spacing:4px"><button class="btn-primary" onclick="checkPincode()">Check Availability</button><p id="pinMsg" style="font-size:12px;margin-top:8px"></p></div></div>
+<div class="overlay" id="loginGate"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">👤 Your Details</h3><button onclick="closeLogin()" class="close-x">❌</button></div><input id="uName" placeholder="Full Name *" style="margin-top:12px"><input id="uMobile" placeholder="Mobile *"><input id="uEmail" placeholder="Email"><textarea id="uAddress" placeholder="Full Address *"></textarea><button class="btn-primary" onclick="saveUser()">Save</button></div></div>
+<div class="overlay" id="checkoutModal"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">💳 Place Order</h3><button onclick="closeCheckout()" class="close-x">❌</button></div><div id="checkoutSummary" style="background:#FFFBF2;border-radius:12px;padding:10px;margin:12px 0;font-size:12px"></div><p style="font-size:12px;font-weight:800">Payment:</p><div style="display:flex;gap:8px;margin-bottom:12px"><div class="pay-opt active" id="payCOD" onclick="setPayment('COD')">💵 COD</div><div class="pay-opt" id="payOnline" onclick="setPayment('Online')">📱 Online</div></div><div id="onlineBox" style="display:none;background:#E8F5E9;padding:10px;border-radius:10px;font-size:11px;margin-bottom:10px"><b>UPI:</b> guptabakery@upi</div><button class="btn-primary" onclick="confirmOrder()">✅ Confirm Order</button></div></div>
+<div class="overlay" id="billModal"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🧾 Bill</h3><button onclick="closeBill()" class="close-x">❌</button></div><div id="billContent" class="bill-paper" style="margin-top:10px"></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px"><button onclick="downloadBillPDF()" style="background:#111;color:#fff;border:none;padding:12px;border-radius:10px;font-weight:800">📥 PDF</button><button onclick="shareBill()" style="background:#25D366;color:#fff;border:none;padding:12px;border-radius:10px;font-weight:800">📲 Share</button></div><p style="font-size:10px;text-align:center"><span id="billId"></span></p></div></div>
+
+<!-- ADMIN MODAL FIXED + WHATSAPP BUTTONS RESTORED -->
+<div class="overlay" id="adminModal"><div class="box" style="max-width:580px"><div style="display:flex;justify-content:space-between;align-items:center"><h3 style="margin:0">🔧 Owner Panel - Secure</h3><button onclick="closeAdmin()" class="close-x">❌</button></div>
+<div id="adminLogin"><p style="font-size:12px;color:#666;margin-top:12px">Owner access only - Password Protected 🔒</p><input id="adminPass" type="password" placeholder="Enter secure password" autocomplete="off"><button class="btn-primary" onclick="doAdminLogin()">Login</button><p id="adminMsg" style="font-size:12px;color:red"></p><p id="adminLockMsg" style="font-size:11px;color:#8D6E63"></p></div>
+<div id="adminContent" style="display:none">
+<div style="display:flex;gap:6px;margin-bottom:12px"><button onclick="showAdminTab('orders')" id="tabOrders" style="flex:1;background:#E65100;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:800">Orders</button><button onclick="showAdminTab('products')" id="tabProducts" style="flex:1;background:#fff;color:#E65100;border:1.5px solid #E65100;padding:10px;border-radius:10px;font-weight:800">Add / Edit Products</button></div>
+<div id="adminOrdersTab">
+<div id="lastOrderBox" style="background:#FFFBF2;border:1px dashed #FFCC80;border-radius:12px;padding:10px;font-size:12px">No order</div>
+<button onclick="sendCustomerConfirmation()" style="width:100%;margin:10px 0;background:#25D366;color:#fff;border:none;padding:12px;border-radius:12px;font-weight:800">📲 Customer ko Confirmation bhejo</button>
+<button onclick="sendOwnerDetails()" style="width:100%;background:#111;color:#fff;border:none;padding:12px;border-radius:12px;font-weight:800">👑 Owner ko Details bhejo</button>
+</div>
+<div id="adminProductsTab" style="display:none">
+<div style="background:#FFF3E0;border:2px solid #E65100;border-radius:16px;padding:14px;margin-bottom:14px"><b style="color:#BF360C">➕ Add New Product</b><input id="newPName" placeholder="Product Name *"><textarea id="newPDesc" placeholder="Description" rows="2"></textarea><div style="display:flex;gap:6px"><input id="newPPrice" placeholder="Base Price *" type="number" style="flex:1"><select id="newPCat" style="flex:1"><option>Cakes</option><option>Breads</option><option>Savoury</option><option>Namkeen</option><option>Cookies</option></select></div><input id="newPWeight1" placeholder="Weight 1 * ex: 500 g - ₹450"><input id="newPWeight2" placeholder="Weight 2 optional"><div style="display:flex;gap:6px;margin-top:4px"><button onclick="document.getElementById('newPImgFile').click()" style="flex:1;background:#111;color:#fff;border:none;padding:10px;border-radius:10px;font-weight:700;font-size:11px">📁 Gallery Photo</button><button onclick="useLink()" style="flex:1;background:#fff;color:#E65100;border:1.5px solid #E65100;padding:10px;border-radius:10px;font-weight:700;font-size:11px">🔗 Link</button></div><input type="file" id="newPImgFile" accept="image/*" style="display:none" onchange="handleImageUpload(this)"><input id="newPImg" placeholder="Image will appear here" style="font-size:11px"><img id="newPPreview" style="width:100%;height:140px;object-fit:cover;border-radius:10px;display:none;margin-top:6px"><button onclick="addNewProduct()" style="width:100%;margin-top:8px;background:#2E7D32;color:#fff;border:none;padding:12px;border-radius:12px;font-weight:800">✅ Add Product</button></div>
+<div id="adminProductsList"></div>
+</div>
+</div></div></div>
+
+<script>
+(() => {
+const _0xPIN_HASH="453441";
+const _0xADMIN_HASH="R3VwdGFCYWtlcnk0NDY="; // GuptaBakery446 - same password
+let deliveryMode="pickup",paymentMode="COD",userData=JSON.parse(localStorage.getItem('gupta_user')||'null'),lastOrderData=JSON.parse(localStorage.getItem('gupta_last_order')||'null'),orderId=localStorage.getItem('gupta_order_id')||'GB-'+Date.now().toString().slice(-6);
+const PHONE="918823008888";
+document.addEventListener('contextmenu', e=>e.preventDefault());
+document.onkeydown = function(e){ if(e.keyCode==123 || (e.ctrlKey && e.shiftKey && e.keyCode==73) || (e.ctrlKey && e.keyCode==85)) return false; };
+function getAttempts(){ return parseInt(localStorage.getItem('gupta_admin_attempt')||'0'); }
+function setAttempts(n){ localStorage.setItem('gupta_admin_attempt', n); localStorage.setItem('gupta_admin_time', Date.now()); }
+function checkLock(){ let attempts=getAttempts(); let last=parseInt(localStorage.getItem('gupta_admin_time')||'0'); if(attempts>=3 && Date.now()-last < 15*60*1000){ let mins=Math.ceil((15*60*1000 - (Date.now()-last))/60000); document.getElementById('adminLockMsg').textContent=`🔒 Locked for ${mins} min`; return true; } if(Date.now()-last > 15*60*1000) setAttempts(0); return false; }
+
+const DEFAULT_ITEMS=[{n:"Chocolate truffle cake",c:"Cakes",d:"Dark ganache",p:450,img:"https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=500",weights:["500 g - ₹450","1 kg - ₹850"]},{n:"Pineapple cake",c:"Cakes",d:"Fresh cream",p:400,img:"https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=500",weights:["500 g - ₹400","1 kg - ₹750"]},{n:"Milk bread",c:"Breads",d:"Soft loaf",p:45,img:"https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=500",weights:["1 pcs - ₹45","2 pcs - ₹85"]},{n:"Veg patties",c:"Savoury",d:"Flaky puff",p:25,img:"https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=500",weights:["1 pc - ₹25","2 pcs - ₹45"]},{n:"Masala mixture",c:"Namkeen",d:"Spicy mix",p:280,img:"https://images.unsplash.com/photo-1608198093002-ad4e005484ec?w=500",weights:["250 g - ₹80","1 kg - ₹280"]}];
+const CATS=["All","Cakes","Breads","Savoury","Namkeen","Cookies"];
+let ITEMS=JSON.parse(localStorage.getItem('gupta_items_edit18')||'null')||DEFAULT_ITEMS;
+let cart=JSON.parse(localStorage.getItem('gupta_cart_edit18')||'null')||(lastOrderData?lastOrderData.items:{}),active="All",query="",tempUploadedImage="";
+
+window.checkPincode=function(){let pin=document.getElementById("pinInput").value.trim();if(pin===_0xPIN_HASH){localStorage.setItem('gupta_pincode_verified','1');document.getElementById("pincodeGate").classList.remove("on");if(!userData)document.getElementById("loginGate").classList.add("on");}else{document.getElementById("pinMsg").textContent="❌ Wrong pincode";}};
+if(localStorage.getItem('gupta_pincode_verified')==='1')document.getElementById("pincodeGate").classList.remove("on");
+
+window.saveUser=function(){let n=document.getElementById("uName").value.trim(),m=document.getElementById("uMobile").value.trim(),a=document.getElementById("uAddress").value.trim();if(!n||!m||!a)return alert("Bharo");userData={name:n,mobile:m,address:a,email:document.getElementById("uEmail").value};localStorage.setItem('gupta_user',JSON.stringify(userData));document.getElementById("loginGate").classList.remove("on");updateUserUI();};
+function updateUserUI(){if(userData){document.getElementById("userBtn").textContent=userData.name.split(" ")[0];if(lastOrderData)document.getElementById("billBtn").style.display="inline-block";}}updateUserUI();
+window.closeLogin=function(){document.getElementById("loginGate").classList.remove("on");};
+document.getElementById("adminBtn").onclick=()=>{window.openAdmin();};
+document.getElementById("userBtn").onclick=()=>{document.getElementById("loginGate").classList.add("on");if(userData){document.getElementById("uName").value=userData.name;document.getElementById("uMobile").value=userData.mobile;document.getElementById("uAddress").value=userData.address;}};
+
+const grid=document.getElementById("grid"),filters=document.getElementById("filters");
+CATS.forEach(c=>{let b=document.createElement("button");b.className="chip";b.textContent=c;b.dataset.cat=c;b.setAttribute("aria-pressed",c==="All");b.onclick=()=>{active=c;paint();};filters.appendChild(b);});
+
+function paint(){[...filters.children].forEach(b=>b.setAttribute("aria-pressed",b.dataset.cat===active));let q=query.toLowerCase();let list=ITEMS.filter(i=>(active==="All"||i.c===active)&&(!q||(i.n+i.d).toLowerCase().includes(q)));grid.innerHTML="";list.forEach((i)=>{let realIdx=ITEMS.indexOf(i);let el=document.createElement("div");el.className="item";el.innerHTML=`<div class="thumb"><img src="${i.img}"></div><div class="item-body"><h3 style="font-size:13px;margin:0">${i.n}</h3><small style="color:#8D6E63">₹${i.p} • ${i.d}</small><div class="qty-row"><select class="weight-select" onchange="ITEMS[${realIdx}].selectedWeight=this.value;">${i.weights.map(w=>`<option ${w===(i.selectedWeight||i.weights[0])?'selected':''}>${w}</option>`).join("")}</select><div class="qty-box"><button onclick="changeQty(${realIdx},-1)">−</button><input value="${i.tempQty||1}" id="qty-${realIdx}"><button onclick="changeQty(${realIdx},1)">+</button></div></div><button class="add-btn" onclick="addToCart(${realIdx})">ADD TO CART</button></div>`;grid.appendChild(el);});}
+
+window.changeQty=function(idx,d){let v=Math.max(1,Math.min(20,(ITEMS[idx].tempQty||1)+d));ITEMS[idx].tempQty=v;let inp=document.getElementById(`qty-${idx}`);if(inp)inp.value=v;};
+
+window.addToCart=function(idx){if(!userData){document.getElementById("loginGate").classList.add("on");return;}let i=ITEMS[idx];let weight=i.selectedWeight||i.weights[0];let price=parseInt(weight.match(/₹(\d+)/)[1])||i.p;let qty=parseInt(document.getElementById(`qty-${idx}`)?.value||1);let key=i.n+"|"+weight;if(cart[key]){cart[key].qty+=qty;cart[key].total=cart[key].qty*cart[key].price;}else{cart[key]={name:i.n,weight,qty,price,total:qty*price,img:i.img};}updateCart();openCart();};
+
+window.setDelivery=function(mode){deliveryMode=mode;document.getElementById("optPickup").classList.toggle("active",mode==="pickup");document.getElementById("optDelivery").classList.toggle("active",mode==="delivery");document.getElementById("optPickup2")&&document.getElementById("optPickup2").classList.toggle("active",mode==="pickup");document.getElementById("optDelivery2")&&document.getElementById("optDelivery2").classList.toggle("active",mode==="delivery");updateCart();};
+
+function updateCart(){
+let keys=Object.keys(cart);
+document.getElementById("cartbar").classList.toggle("on",keys.length>0);
+let count=keys.reduce((s,k)=>s+cart[k].qty,0);
+let itemsTotal=keys.reduce((s,k)=>s+cart[k].total,0);
+let delivery=deliveryMode==="delivery"?15:0;
+let grand=itemsTotal+delivery;
+document.getElementById("cart-count").textContent=count+" items";
+document.getElementById("cart-breakup").textContent=deliveryMode==="delivery"?`Items ₹${itemsTotal} + Delivery ₹${delivery}`:`Items ₹${itemsTotal}`;
+document.getElementById("cart-total").textContent=`Total ₹${grand}`;
+document.getElementById("cartBtn").textContent=`🛒 Cart (${count})`;
+document.getElementById("cartItemsTotal").textContent=`₹${itemsTotal}`;
+document.getElementById("cartDelivery").textContent=`₹${delivery}`;
+document.getElementById("cartGrandTotal").textContent=`₹${grand}`;
+let lines=keys.map(k=>`• ${cart[k].name} (${cart[k].weight}) × ${cart[k].qty} = ₹${cart[k].total}`).join("\n");
+if(!orderId){orderId='GB-'+Date.now().toString().slice(-6);localStorage.setItem('gupta_order_id',orderId);}
+lastOrderData={orderId,user:userData,items:cart,itemsTotal,delivery,grand,mode:deliveryMode,payment:paymentMode,lines,time:new Date().toLocaleString()};
+localStorage.setItem('gupta_last_order',JSON.stringify(lastOrderData));
+localStorage.setItem('gupta_cart_edit18',JSON.stringify(cart));
+if(userData)document.getElementById("billBtn").style.display="inline-block";
+document.getElementById("lastOrderBox").innerHTML=keys.length?`<b>${userData?userData.name:''}</b><br>${lines}<br><b>Grand ₹${grand}</b> - ${deliveryMode.toUpperCase()}`:"No order";
+renderCartList();
+}
+
+function renderCartList(){
+let list=document.getElementById("cartList");
+let empty=document.getElementById("cartEmpty");
+let keys=Object.keys(cart);
+if(keys.length===0){list.innerHTML="";empty.style.display="block";return;}
+empty.style.display="none";
+list.innerHTML="";
+keys.forEach(key=>{
+let it=cart[key];
+let div=document.createElement("div");
+div.className="cart-item";
+div.innerHTML=`<img src="${it.img}"><div style="flex:1"><b style="font-size:12px">${it.name}</b><br><small style="font-size:10px">${it.weight} • ₹${it.price}</small><br><small style="font-size:11px;color:#E65100;font-weight:800">₹${it.total}</small></div><div style="display:flex;flex-direction:column;gap:6px;align-items:center"><div class="cart-qty"><button onclick="changeCartQty('${key.replace(/'/g,"\\'")}',-1)">−</button><span style="padding:0 8px;font-weight:800;font-size:12px">${it.qty}</span><button onclick="changeCartQty('${key.replace(/'/g,"\\'")}',1)">+</button></div><button onclick="removeFromCart('${key.replace(/'/g,"\\'")}')" style="background:#FFEBEE;color:#C62828;border:none;padding:4px 8px;border-radius:6px;font-size:10px;font-weight:700;cursor:pointer">❌ Remove</button></div>`;
+list.appendChild(div);
+});
+}
+window.changeCartQty=function(key,d){if(!cart[key])return;cart[key].qty+=d;if(cart[key].qty<=0){delete cart[key];}else{cart[key].total=cart[key].qty*cart[key].price;}updateCart();}
+window.removeFromCart=function(key){if(confirm(`Remove ${cart[key].name}?`)){delete cart[key];updateCart();}}
+window.clearCart=function(){if(confirm("Clear full cart?")){cart={};updateCart();}}
+window.openCart=function(){document.getElementById("cartModal").classList.add("on");renderCartList();}
+window.closeCart=function(){document.getElementById("cartModal").classList.remove("on");}
+window.goToCheckout=function(){closeCart();openCheckout();}
+window.openCheckout=function(){if(!userData){document.getElementById("loginGate").classList.add("on");return;}if(Object.keys(cart).length===0)return alert("Cart empty");let d=lastOrderData;document.getElementById("checkoutSummary").innerHTML=`<b>${d.user.name}</b> - ${d.user.mobile}<br>${d.user.address}<br><br>${d.lines}<br><br><b>Total ₹${d.grand} - ${d.mode.toUpperCase()}</b>`;document.getElementById("checkoutModal").classList.add("on");}
+window.closeCheckout=function(){document.getElementById("checkoutModal").classList.remove("on");}
+window.setPayment=function(mode){paymentMode=mode;document.getElementById("payCOD").classList.toggle("active",mode==="COD");document.getElementById("payOnline").classList.toggle("active",mode==="Online");document.getElementById("onlineBox").style.display=mode==="Online"?"block":"none";updateCart();}
+window.confirmOrder=function(){closeCheckout();if(!lastOrderData)return;lastOrderData.payment=paymentMode;localStorage.setItem('gupta_last_order',JSON.stringify(lastOrderData));let msg=`*New Order ${lastOrderData.orderId}*\n👤 ${userData.name}\n📱 ${userData.mobile}\n📍 ${userData.address}\n💳 ${paymentMode} | 🚚 ${lastOrderData.mode.toUpperCase()}\n\n${lastOrderData.lines}\n\nTotal ₹${lastOrderData.grand}`;window.open("https://wa.me/"+PHONE+"?text="+encodeURIComponent(msg),"_blank");setTimeout(()=>{viewBill();},800);}
+function generateBillHTML(){if(!lastOrderData)return "No order";let d=lastOrderData;let rows=Object.values(d.items).map(it=>`<tr><td>${it.name}<br><small>${it.weight}</small></td><td style="text-align:center">${it.qty}</td><td style="text-align:right">₹${it.price}</td><td style="text-align:right">₹${it.total}</td></tr>`).join("");return `<div style="text-align:center;border-bottom:2px dashed #000;padding-bottom:8px"><b>GUPTA BAKERY</b></div><div style="font-size:11px;margin:8px 0"><b>Bill:</b> ${d.orderId}<br><b>Customer:</b> ${d.user.name}<br><b>Mode:</b> ${d.mode.toUpperCase()}<br><b>Payment:</b> ${d.payment}</div><table style="width:100%;border-top:1px dashed #000;border-bottom:1px dashed #000;font-size:11px"><tr><th style="text-align:left">Item</th><th>Qty</th><th style="text-align:right">Rate</th><th style="text-align:right">Amt</th></tr>${rows}</table><div style="text-align:right;margin-top:8px"><b>Grand ₹${d.grand}</b></div>`;}
+function viewBill(){if(!lastOrderData)return alert("Pehle order karo");document.getElementById("billContent").innerHTML=generateBillHTML();document.getElementById("billId").textContent=lastOrderData.orderId;document.getElementById("billModal").classList.add("on");}
+window.openBill=function(){viewBill();};window.closeBill=function(){document.getElementById("billModal").classList.remove("on");}
+window.downloadBillPDF=function(){if(!lastOrderData)return;const {jsPDF}=window.jspdf;let doc=new jsPDF();let y=10;doc.text("GUPTA BAKERY",105,y,{align:"center"});y+=8;doc.setFontSize(10);doc.text(`Bill ${lastOrderData.orderId}`,10,y);y+=6;Object.values(lastOrderData.items).forEach(it=>{doc.text(`${it.name} x${it.qty} Rs${it.total}`,10,y);y+=6;});y+=4;doc.text(`Grand Rs${lastOrderData.grand}`,10,y);doc.save(`${lastOrderData.orderId}.pdf`);}
+window.shareBill=function(){if(!lastOrderData)return;let t=`Bill ${lastOrderData.orderId} Total Rs${lastOrderData.grand}`;window.open("https://wa.me/?text="+encodeURIComponent(t),"_blank");}
+window.openAdmin=function(){if(checkLock()){document.getElementById("adminModal").classList.add("on");return;}document.getElementById("adminModal").classList.add("on");};
+window.closeAdmin=function(){document.getElementById("adminModal").classList.remove("on");};
+window.doAdminLogin=function(){if(checkLock()) return; let input=document.getElementById("adminPass").value; let decoded=atob(_0xADMIN_HASH); if(input===decoded){setAttempts(0);document.getElementById("adminLogin").style.display="none";document.getElementById("adminContent").style.display="block";renderAdminProducts();}else{let a=getAttempts()+1;setAttempts(a);document.getElementById("adminMsg").textContent=`❌ Incorrect (${a}/3)`; if(a>=3) document.getElementById("adminLockMsg").textContent="🔒 Locked 15 min";}};
+window.showAdminTab=function(tab){document.getElementById("adminOrdersTab").style.display=tab==="orders"?"block":"none";document.getElementById("adminProductsTab").style.display=tab==="products"?"block":"none";document.getElementById("tabOrders").style.background=tab==="orders"?"#E65100":"#fff";document.getElementById("tabOrders").style.color=tab==="orders"?"#fff":"#E65100";document.getElementById("tabProducts").style.background=tab==="products"?"#E65100":"#fff";document.getElementById("tabProducts").style.color=tab==="products"?"#fff":"#E65100";if(tab==="products")renderAdminProducts();}
+window.handleImageUpload=function(input){if(input.files && input.files[0]){let reader=new FileReader();reader.onload=function(e){tempUploadedImage=e.target.result;document.getElementById("newPImg").value=tempUploadedImage;let prev=document.getElementById("newPPreview");prev.src=tempUploadedImage;prev.style.display="block";};reader.readAsDataURL(input.files[0]);}}
+window.useLink=function(){tempUploadedImage="";document.getElementById("newPPreview").style.display="none";document.getElementById("newPImg").value="";}
+function renderAdminProducts(){let list=document.getElementById("adminProductsList");list.innerHTML="";ITEMS.forEach((it,idx)=>{let div=document.createElement("div");div.className="admin-product";div.innerHTML=`<img src="${it.img}"><div style="flex:1"><b style="font-size:12px">${it.n} - ₹${it.p}</b><br><input id="pName${idx}" value="${it.n}" style="font-size:11px;padding:5px"><div style="display:flex;gap:4px"><input id="pPrice${idx}" value="${it.p}" type="number" style="flex:1;font-size:11px;padding:5px"><input id="pW1${idx}" value="${it.weights[0]}" style="flex:1;font-size:10px;padding:5px"></div><input id="pImg${idx}" value="${it.img}" style="font-size:9px;padding:5px"><div style="display:flex;gap:4px;margin-top:4px"><button onclick="updateProduct(${idx})" style="flex:1;background:#2E7D32;color:#fff;border:none;padding:6px;border-radius:8px;font-size:11px;font-weight:800">Save</button><button onclick="deleteProduct(${idx})" style="background:#FFEBEE;color:#C62828;border:1px solid #FFCDD2;padding:6px;border-radius:8px;font-size:11px">Del</button></div></div>`;list.appendChild(div);});}
+window.updateProduct=function(idx){let name=document.getElementById(`pName${idx}`).value.trim();let price=parseInt(document.getElementById(`pPrice${idx}`).value)||ITEMS[idx].p;let w1=document.getElementById(`pW1${idx}`).value.trim();let img=document.getElementById(`pImg${idx}`).value.trim();if(!name||!img)return alert("Name Image bharo");ITEMS[idx].n=name;ITEMS[idx].p=price;ITEMS[idx].img=img;if(w1)ITEMS[idx].weights[0]=w1;localStorage.setItem('gupta_items_edit18',JSON.stringify(ITEMS));paint();renderAdminProducts();alert("✅ Updated");}
+window.deleteProduct=function(idx){if(confirm("Delete?")){ITEMS.splice(idx,1);localStorage.setItem('gupta_items_edit18',JSON.stringify(ITEMS));renderAdminProducts();paint();}}
+window.addNewProduct=function(){let name=document.getElementById("newPName").value.trim();let desc=document.getElementById("newPDesc").value.trim()||"Fresh";let price=parseInt(document.getElementById("newPPrice").value)||0;let cat=document.getElementById("newPCat").value;let w1=document.getElementById("newPWeight1").value.trim();let w2=document.getElementById("newPWeight2").value.trim();let img=document.getElementById("newPImg").value.trim()||tempUploadedImage;if(!name||!price||!img)return alert("Name, Price, Photo bharo");if(!w1) w1=`1 pcs - ₹${price}`;let weights=[w1];if(w2) weights.push(w2);ITEMS.push({n:name,c:cat,d:desc,p:price,img:img,weights:weights});localStorage.setItem('gupta_items_edit18',JSON.stringify(ITEMS));document.getElementById("newPName").value="";document.getElementById("newPDesc").value="";document.getElementById("newPPrice").value="";document.getElementById("newPWeight1").value="";document.getElementById("newPWeight2").value="";document.getElementById("newPImg").value="";document.getElementById("newPPreview").style.display="none";tempUploadedImage="";renderAdminProducts();paint();alert("✅ Product Added");}
+window.sendCustomerConfirmation=function(){if(!lastOrderData)return;let u=lastOrderData.user;let msg=`Hi ${u.name}! 🎂 Your Order ${lastOrderData.orderId} confirmed at Gupta Bakery - Total ₹${lastOrderData.grand} (${lastOrderData.mode.toUpperCase()}) - ${lastOrderData.payment}`;let ph=u.mobile.replace(/\D/g,'');if(ph.length==10)ph='91'+ph;window.open("https://wa.me/"+ph+"?text="+encodeURIComponent(msg),"_blank");}
+window.sendOwnerDetails=function(){if(!lastOrderData)return;let msg=`OWNER COPY - ${lastOrderData.orderId}\n👤 ${lastOrderData.user.name}\n📱 ${lastOrderData.user.mobile}\n📍 ${lastOrderData.user.address}\n🚚 ${lastOrderData.mode}\n${lastOrderData.lines}\nGrand ₹${lastOrderData.grand} - ${lastOrderData.payment}`;window.open("https://wa.me/"+PHONE+"?text="+encodeURIComponent(msg),"_blank");}
+document.getElementById("search").addEventListener("input",e=>{query=e.target.value;paint();});
+paint();updateCart();
+})();
+</script>
+</body>
+</html>
